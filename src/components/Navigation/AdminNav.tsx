@@ -6,66 +6,86 @@ import { Link } from 'react-router-dom';
 const MenuList = [
   {
     idx: 'Main',
-    title: '메인화면',
+    title: '대시보드',
     subTitleList: null,
-    route: '/admin',
+    route: '/adm',
   },
   {
+      idx: 'User',
+      title: '회원 관리',
+      subTitleList: null,
+      route: '/adm/userlist',
+      //     [
+      //     {
+      //         idx: 'Userlist',
+      //         title: '회원관리',
+      //
+      //     },
+      //     {
+      //         idx: 'UserlistOut',
+      //         title: '탈퇴 회원 관리',
+      //         route: '/userlist-out',
+      //     },
+      // ],
+  },
+
+  { idx: 'Fair', title: 'FAIR', subTitleList: null, route: '/adm/fairlist', },//개발필요
+  { idx: 'Artworks', title: 'ARTWORKS', subTitleList: null, route: '/adm/artworklist', },//개발필요
+  { idx: 'Banners', title: '메인화면 관리', subTitleList:
+      [
+          { idx: 'weekly', title: 'Weekly Edition 관리', route: '/adm/weeklylist' },//개발필요
+          { idx: 'featured', title: 'Featured works 관리', route: '/adm/discoverfeaturedlist' },//개발필요
+          { idx: 'Banner', title: '배너 관리', route: '/adm/settingbanner' },
+      ]
+  },
+  { idx: 'sns', title: 'Discover 관리', subTitleList: null, route: '/adm/discoverlist' },//개발필요
+
+ /* {//제거예정
     idx: 'Product',
     title: 'Designer Product 관리',
     subTitleList: [
       {
         idx: 'Banner',
         title: 'Designer Product 배너 관리',
-        route: '/admin/settingbanner',
+        route: '/adm/settingbanner',
       },
       {
         idx: 'Product-Register',
-        title: 'Designer Product 등록',
-        route: '/admin/registerproduct',
+        title: 'Artwork 등록',
+        route: '/adm/registerproduct',
       },
-      { idx: 'Product-Manage', title: 'Designer Product 관리', route: '/admin/productlist' },
+      { idx: 'Product-Manage', title: 'Designer Product 관리', route: '/adm/productlist' },
     ],
-  },
-  {
-    idx: 'Producing',
-    title: 'Producing 관리',
-    subTitleList: [
-      {
-        idx: 'Producing-Register',
-        title: 'Producing 등록',
-        route: '/admin/registerproducer',
-      },
-      {
-        idx: 'Producing-Manage',
-        title: 'Producing 관리',
-        route: '/admin/producerlist',
-      },
-    ],
-  },
+  },*/
+
+    {
+      idx: 'Report',
+      title:'신고 관리',
+      subTitleList: [
+          { idx: 'Report-Lis', title: '게시글 신고 관리', route: '/adm/reportsnslist' },
+          { idx: 'Report-User-Lis', title: '사용자 신고 관리', route: '/adm/reportuserlist' },
+      ]
+    },
   {
     idx: 'Board',
-    title: '게시물 관리',
+    title: '문의 관리',
     subTitleList: [
-      { idx: 'Ask-Lis', title: '문의글 답변 등록', route: '/admin/asklist' },
+      { idx: 'Ask-Lis', title: '1:1 Meassage 관리', route: '/adm/asklist' },
+
       {
         idx: 'Ask-Store',
-        title: '보관된 문의글',
-        route: '/admin/asklist-stored',
+        title: '보관된 Meassage',
+        route: '/adm/asklist-stored',
       },
+      { idx: 'selling-Lis', title: 'Selling 관리', route: '/adm/sellinglist' },//개발필요
       {
         idx: 'FAQ',
         title: 'FAQ 관리',
-        route: '/admin/faqlist',
+        route: '/adm/faqlist',
       },
     ],
   },
-  {
-    idx: 'User',
-    title: '회원 관리',
-    subTitleList: null,
-    route: '/admin/userlist',
-  },
+
   {
     idx: 'Setting',
     title: '설정',
@@ -73,12 +93,17 @@ const MenuList = [
       {
         idx: 'Setting-Terms',
         title: '약관관리',
-        route: '/admin/settingterms',
+        route: '/adm/settingterms',
       },
       {
         idx: 'Setting-Info',
         title: '회사정보',
-        route: '/admin/settingcompanyinfo',
+        route: '/adm/settingcompanyinfo',
+      },
+      {//개발필요
+          idx: 'Category-Info',
+          title: '카테고리 관리',
+          route: '/adm/categorylist',
       },
     ],
     selected: false,

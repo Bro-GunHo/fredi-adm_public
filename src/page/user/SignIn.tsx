@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import kakaoImage from '../../asset/image/sns_kakao.png';
-import { APISignIn } from '../../api/UserAPI';
+import { APISignIn, APISignInAdmin } from '../../api/UserAPI';
 import NaverLoginButton from '../../components/Login/NaverLoginButton';
 import { UserContext } from '../../context/user';
 
@@ -40,15 +40,16 @@ function SignIn() {
       user_id: userId,
       password: password,
       uuid: uuid,
+      level:0,
     };
     try {
-      const res = await APISignIn(data);
+      const res = await APISignInAdmin(data);
       console.log(res);
       setAlertType(undefined);
       const token = res.token;
       sessionStorage.setItem('token', token);
       patchUser(res.userInfo.idx, res.userInfo.level);
-      navigate('/');
+      navigate('/adm');
     } catch (error) {
       console.log(error);
       setAlertType('faild');
@@ -103,7 +104,7 @@ function SignIn() {
   return (
     <Container>
       <SignInBox>
-        <Title>로그인</Title>
+        <Title>관리자로그인</Title>
         <InputWrap>
           <InputTitle>아이디</InputTitle>
           <TextInput
@@ -136,18 +137,7 @@ function SignIn() {
         <BlackButton onClick={onSignIn}>
           <BlackButtonText>로그인</BlackButtonText>
         </BlackButton>
-        <FindIdRowWrap>
-          <FindIdText onClick={() => navigate('/finduserid')}>아이디 찾기</FindIdText>
-          <Line />
-          <FindIdText onClick={() => navigate('/findpassword')}>비밀번호 찾기</FindIdText>
-        </FindIdRowWrap>
-        <SnsRowWrap>
-          <SnsButton src={kakaoImage} onClick={onKakaoLogin} />
-          <NaverLoginButton />
-        </SnsRowWrap>
-        <BottomText onClick={() => navigate('/signup')}>
-          아직 회원이 아니신가요?&nbsp;<UnderLinedText>회원가입</UnderLinedText>
-        </BottomText>
+        
       </SignInBox>
     </Container>
   );

@@ -26,7 +26,7 @@ function RegisterProduct() {
   const [showAlertModal, setShowAlertModal] = useState<boolean>(false);
   const [images, setImages] = useState<dndData[]>([]);
   const [init, setInit] = useState<dndData[]>([]);
-  const [category, setCategory] = useState<'1' | '2' | '3' | '4' | '5' | '6'>('1');
+  const [category, setCategory] = useState<string>('1');
   const [name, setName] = useState<string>('');
   const [designer, setDesigner] = useState<string>('');
   const [size, setSize] = useState<string>('');
@@ -98,7 +98,7 @@ function RegisterProduct() {
   const fetchDetail = async () => {
     const resData = await APIProductDetails({ idx });
     console.log(resData);
-    setCategory(String(resData.category) as '1' | '2' | '3' | '4' | '5' | '6');
+    setCategory(String(resData.category) as string);
     setWeight(resData.weight);
     setInit(resData.imageList.map((image: any) => ({ symbol: image.idx, name: image.file_name, url: image.file_name })));
     setName(resData.name);
@@ -148,7 +148,7 @@ function RegisterProduct() {
               variant="unstyled"
               value={category}
               data={CATEGORYLIST}
-              onChange={(value: '1' | '2' | '3' | '4' | '5' | '6') => setCategory(value)}
+              onChange={(value: string) => setCategory(value)}
             />
           </UnderLineBox>
         </InputWrap>

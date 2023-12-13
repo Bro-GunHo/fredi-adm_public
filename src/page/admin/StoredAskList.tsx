@@ -10,6 +10,7 @@ import ConfirmModal from '../../components/Modal/ConfirmModal';
 type TAskListItemAdmin = {
   idx: number;
   title: string;
+    ask_type:'1' | '2' | '3' | '4' | '5' | '6';
   question: string;
   answer: string | null;
   created_time: Date;
@@ -17,6 +18,15 @@ type TAskListItemAdmin = {
   user: {
     nickname: string;
   };
+};
+
+const AskObject = {
+    '1': 'About Product',
+    '2': 'Availiability',
+    '3': 'Shipping',
+    '4': 'Payment',
+    '5': 'Condition & Provenance',
+    '6': 'Others'
 };
 
 function StoredAskList() {
@@ -125,7 +135,7 @@ function StoredAskList() {
                   <Accordion.Control>
                     <TitleBox>
                       <RowWrap>
-                        <ListItemTitle>{item.title}</ListItemTitle>
+                        <ListItemTitle>{item?.ask_type ? `[${AskObject[item.ask_type]}]`:''} {item.title}</ListItemTitle>
                         <StatusBox answerd={!!item.answer}>
                           <StatusBoxText>{item.answer ? '답변완료' : '답변대기'}</StatusBoxText>
                         </StatusBox>

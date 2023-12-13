@@ -58,11 +58,11 @@ function ProductList() {
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [keyword, setKeyword] = useState<string>('');
-  const [category, setCategory] = useState<'1' | '2' | '3' | '4' | '5' | '6'>('1');
+  const [category, setCategory] = useState<string>('1');
   const [confirmModal, setConfirmModal] = useState(false);
   const [itemIdx, setItemIdx] = useState<number | undefined>();
 
-  const getProductList = async (page: number, category: '1' | '2' | '3' | '4' | '5' | '6', keyword: string) => {
+  const getProductList = async (page: number, category: string, keyword: string) => {
     const data = {
       page: page,
       category: Number(category),
@@ -97,14 +97,14 @@ function ProductList() {
   };
 
   const handlePage = (page: number) => {
-    const category = (searchParams.get('category') as '1' | '2' | '3' | '4' | '5' | '6') ?? '1';
+    const category = (searchParams.get('category') as string) ?? '1';
     const keyword = searchParams.get('keyword') ?? '';
     setSearchParams({ page: String(page), category, keyword });
   };
 
   useEffect(() => {
     const page = searchParams.get('page') ?? 1;
-    const category = (searchParams.get('category') as '1' | '2' | '3' | '4' | '5' | '6') ?? '1';
+    const category = (searchParams.get('category') as string) ?? '1';
     const keyword = searchParams.get('keyword') ?? '';
 
     setPage(Number(page));
@@ -142,7 +142,7 @@ function ProductList() {
               variant="unstyled"
               value={category}
               data={CATEGORYLIST}
-              onChange={(value: '1' | '2' | '3' | '4' | '5' | '6') => setCategory(value)}
+              onChange={(value: string) => setCategory(value)}
             />
           </UnderLineBox>
           <SearchInput
@@ -178,7 +178,7 @@ function ProductList() {
               </ListItemTextBox>
             </ListItemBox>
             <ButtonWrap>
-              <WhiteButton onClick={() => navigate(`/admin/product/${item.idx}`)}>
+              <WhiteButton onClick={() => navigate(`/product/${item.idx}`)}>
                 <WhiteButtonText>수정</WhiteButtonText>
               </WhiteButton>
               <WhiteButton onClick={() => setItemIdx(item.idx)}>

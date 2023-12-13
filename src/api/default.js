@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 // const host = 'http://192.168.0.155:4000';
+// const host = 'http://localhost:4000'
 const host = 'https://fredi.co.kr';
 
 

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Modal } from '@mantine/core';
 import { APICheckPassword, APIUserDetails } from '../../api/UserAPI';
 import { UserContext } from '../../context/user';
+import {TImage} from "../admin/ProducerList";
 
 export type TUserDetails = {
   idx: number;
@@ -23,6 +24,13 @@ export type TUserDetails = {
   reason: string;
   level: 0 | 1 | 2 | 3; // 0: 관리자 / 1: 입점업체회원 / 2: 일반회원2 / 3: 일반회원1
   status: 'active' | 'suspended' | 'deleted';
+  zipcode: string;
+  address1: string;
+  address2: string;
+  is_tranding: string;
+  brand_name: string;
+  image: TImage;
+    followers: number;
 };
 
 function Profile() {

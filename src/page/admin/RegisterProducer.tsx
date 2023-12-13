@@ -29,7 +29,7 @@ function RegisterProducer() {
   const [showAlertModal, setShowAlertModal] = useState<boolean>(false);
   const [images, setImages] = useState<dndData[]>([]);
   const [init, setInit] = useState<dndData[]>([]);
-  const [category, setCategory] = useState<'1' | '2' | '3' | '4' | '5' | '6'>('1');
+  const [category, setCategory] = useState<string>('1');
   const [name, setName] = useState<string>('');
   const [addressText, setAddressText] = useState<string>('');
   const [zipCode, setZipCode] = useState<string>('');
@@ -127,7 +127,7 @@ function RegisterProducer() {
     const [hour1, hour2] = hour.split('-');
     const now = dayjs().format('YYYY-MM-DD');
     setTime([dayjs(`${now} ${hour1}`).toDate(), dayjs(`${now} ${hour2}`).toDate()]);
-    setCategory(String(resData.category) as '1' | '2' | '3' | '4' | '5' | '6');
+    setCategory(String(resData.category) as string);
     setName(resData.name);
     setAddressText(resData.address_text);
     setZipCode(resData.zipcode);
@@ -180,7 +180,7 @@ function RegisterProducer() {
               variant="unstyled"
               value={category}
               data={CATEGORYLIST}
-              onChange={(value: '1' | '2' | '3' | '4' | '5' | '6') => setCategory(value)}
+              onChange={(value: string) => setCategory(value)}
             />
           </UnderLineBox>
         </InputWrap>

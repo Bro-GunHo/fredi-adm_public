@@ -1,9 +1,16 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
 import AdminNav from '../../components/Navigation/AdminNav';
+import { UserContext } from '../../context/user';
+
+
+
 
 function Admin() {
+  const { user, patchUser } = useContext(UserContext);
+
+
   return (
     <Container>
       <AdminNav />

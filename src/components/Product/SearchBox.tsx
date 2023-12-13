@@ -36,7 +36,7 @@ function SearchBox({
   category: string;
   keyword: string;
   onChangeInput: (e: any) => void;
-  onChangeCategory: (value: '1' | '2' | '3' | '4' | '5' | '6') => void;
+  onChangeCategory: (value: string) => void;
 }) {
   return (
     <Wrap>

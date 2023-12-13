@@ -35,7 +35,7 @@ function Footer() {
       <FooterBox>
         <FooterTopBox>
           <Logo src={logoImage} />
-          <TextBox>
+          {/*<TextBox>
             <FooterText>대표 {companyInfo?.representative}</FooterText>
             <FooterText>대표전화 {companyInfo?.phone}</FooterText>
             <FooterText>{companyInfo?.address}</FooterText>
@@ -43,14 +43,14 @@ function Footer() {
           <TextBox>
             <FooterText>사업자등록번호 {companyInfo?.business_number}</FooterText>
             <FooterText>통신판매업신고 {companyInfo?.business_number2}</FooterText>
-          </TextBox>
+          </TextBox>*/}
         </FooterTopBox>
-        <FooterBottomBox>
-          <TextButton onClick={() => navigate('/contact/askinfo')}>입점문의</TextButton>
-          <InstaButton href={companyInfo?.instagram} target="_blank">
-            <InstaButtonImage src={instaImage} />
-          </InstaButton>
-        </FooterBottomBox>
+        {/*<FooterBottomBox>*/}
+          {/*<TextButton onClick={() => navigate('/contact/askinfo')}>입점문의</TextButton>*/}
+          {/*<InstaButton href={companyInfo?.instagram} target="_blank">*/}
+            {/*<InstaButtonImage src={instaImage} />*/}
+          {/*</InstaButton>*/}
+        {/*</FooterBottomBox>*/}
       </FooterBox>
     </FooterWrap>
   );
@@ -63,7 +63,7 @@ const FooterWrap = styled.div`
   align-items: center;
   background-color: #ffffff;
   border-top: 1px solid #121212;
-  padding: 45px 50px 0;
+  padding: 25px 50px 25px 50px;
   @media only screen and (max-width: 768px) {
     padding: 25px 18px 0;
     margin-bottom: 60px;
@@ -81,7 +81,7 @@ const FooterBox = styled.div`
 
 const Logo = styled.img`
   width: 80px;
-  margin-bottom: 30px;
+  // margin-bottom: 30px;
   @media only screen and (max-width: 768px) {
     width: 65px;
     margin-bottom: 20px;
@@ -92,8 +92,8 @@ const FooterTopBox = styled.div`
   display: flex;
   width: 100%;
   flex-direction: column;
-  border-bottom: 1px solid #e9e9e9;
-  padding-bottom: 5px;
+  // border-bottom: 1px solid #e9e9e9;
+  // padding-bottom: 5px;
 `;
 
 const TextBox = styled.div`

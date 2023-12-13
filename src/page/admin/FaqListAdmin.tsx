@@ -82,7 +82,7 @@ function FaqListAdmin() {
         <NoDataBox>
           {/* <Logo src={logoImage} /> */}
           <Text>등록된 FAQ가 없습니다.</Text>
-          <BlackButtonNoData onClick={() => navigate('/admin/registerfaq')}>
+          <BlackButtonNoData onClick={() => navigate('/adm/registerfaq')}>
             <BlackButtonText>등록하기</BlackButtonText>
           </BlackButtonNoData>
         </NoDataBox>
@@ -157,7 +157,7 @@ function FaqListAdmin() {
               })}
             />
           </ListWrap>
-          <BlackButton onClick={() => navigate('/admin/registerfaq')}>
+          <BlackButton onClick={() => navigate('/adm/registerfaq')}>
             <BlackButtonText>글쓰기</BlackButtonText>
           </BlackButton>
         </ListWrap>

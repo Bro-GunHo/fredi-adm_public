@@ -58,11 +58,11 @@ function ProducerList() {
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [keyword, setKeyword] = useState<string>('');
-  const [category, setCategory] = useState<'0' | '1' | '2' | '3' | '4' | '5' | '6'>('0');
+  const [category, setCategory] = useState<'0' | string>('0');
   const [confirmModal, setConfirmModal] = useState(false);
   const [itemIdx, setItemIdx] = useState<number | undefined>();
 
-  const getProducerList = async (page: number, category: '0' | '1' | '2' | '3' | '4' | '5' | '6', keyword: string) => {
+  const getProducerList = async (page: number, category: '0' | string, keyword: string) => {
     const data = {
       page: page,
       category: category === '0' ? undefined : Number(category),
@@ -97,14 +97,14 @@ function ProducerList() {
   };
 
   const handlePage = (page: number) => {
-    const category = (searchParams.get('category') as '0' | '1' | '2' | '3' | '4' | '5' | '6') ?? '0';
+    const category = (searchParams.get('category') as '0' | string) ?? '0';
     const keyword = searchParams.get('keyword') ?? '';
     setSearchParams({ page: String(page), category, keyword });
   };
 
   useEffect(() => {
     const page = searchParams.get('page') ?? 1;
-    const category = (searchParams.get('category') as '0' | '1' | '2' | '3' | '4' | '5' | '6') ?? '0';
+    const category = (searchParams.get('category') as '0' | string) ?? '0';
     const keyword = searchParams.get('keyword') ?? '';
 
     setPage(Number(page));
@@ -142,7 +142,7 @@ function ProducerList() {
               variant="unstyled"
               value={category}
               data={CATEGORYLIST}
-              onChange={(value: '0' | '1' | '2' | '3' | '4' | '5' | '6') => setCategory(value)}
+              onChange={(value: '0' | string) => setCategory(value)}
             />
           </UnderLineBox>
           <SearchInput

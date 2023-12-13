@@ -28,7 +28,7 @@ function Producer() {
   const [producerList, setProducerList] = useState<TProducerListItem[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const [category, setCategory] = useState<'0' | '1' | '2' | '3' | '4' | '5' | '6'>('0');
+  const [category, setCategory] = useState<'0' | string>('0');
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [history, setHistory] = useState<boolean>(false);
   const [showType, setShowType] = useState<1 | 2>(1);
@@ -166,7 +166,7 @@ function Producer() {
             variant="unstyled"
             value={category}
             data={CATEGORYLIST}
-            onChange={(value: '0' | '1' | '2' | '3' | '4' | '5' | '6') => {
+            onChange={(value: '0' | string) => {
               setCategory(value);
               setProducerList([]);
               setPage(1);

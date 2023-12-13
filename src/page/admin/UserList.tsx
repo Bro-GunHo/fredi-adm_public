@@ -8,8 +8,10 @@ import { APIUserList } from '../../api/UserAPI';
 import { TUserDetails } from '../user/Profile';
 import dayjs from 'dayjs';
 
+import { LevelObject, UserTypeObject, LevelList } from '../../util/GlobalValues';
+
 const USERSTATELIST = [
-  { value: 'all', label: '전체' },
+  { value: 'all', label: '회원상태' },
   { value: 'active', label: '가입회원' },
   { value: 'deleted', label: '탈퇴회원' },
   { value: 'suspended', label: '휴면회원' },
@@ -26,7 +28,7 @@ const useStyles = createStyles((theme) => ({
 
 const CATEGORYLIST = [
   { value: 'all', label: '통합검색' },
-  { value: 'user_id', label: '아이디' },
+  { value: 'user_id', label: '이메일' },
   { value: 'name', label: '이름' },
   { value: 'nickname', label: '닉네임' },
 ];
@@ -37,18 +39,22 @@ function UserList() {
   const { classes } = useStyles();
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [status, setStatus] = useState<string>('all');
+  const [status, setStatus] = useState<string>('active');
   const [keyword, setKeyword] = useState<string>('');
   const [searchType, setSearchType] = useState<string>('all');
   const [userList, setUserList] = useState<TUserDetails[]>([]);
+  const [level, setLevel] = useState<string>('');
 
-  const getUserList = async (page: number, status: string, searchType: string, keyword: string) => {
+  const getUserList = async (page: number, status: string, searchType: string, keyword: string, level: string) => {
     const data = {
       page: page,
       status: status,
       search_type: searchType,
       keyword: keyword,
+      level: level,
     };
+
+    console.log('ddd', data);
     const { list, total } = await APIUserList(data);
     console.log(list, total);
     setUserList(list);
@@ -57,43 +63,69 @@ function UserList() {
 
   const rows = userList.map((element) => (
     <tr key={element.idx}>
+      <td>{LevelObject[element.level]}</td>
       <td>{element.user_id}</td>
       <td>{element.name}</td>
       <td>{element.nickname}</td>
+      <td>{element.phone}</td>
       <td>{dayjs(element.created_time).format('YYYY-MM-DD')}</td>
-      <td>{element.deleted_time ? '탈퇴회원' : element.suspended_time ? '휴면회원' : '가입회원'}</td>
-      <td>{element.level === 1 ? '입점업체회원' : element.level === 2 ? '일반회원2' : element.level === 3 ? '일반회원1' : ''}</td>
+      <td>{UserTypeObject[element.type]}</td>
+      {/*<td>{element.deleted_time ? '탈퇴회원' : element.suspended_time ? '휴면회원' : '가입회원'}</td>*/}
       <td>
-        <UnderlinedTextButton onClick={() => navigate(`/admin/userdetails/${element.idx}`)}>상세보기</UnderlinedTextButton>
+        <UnderlinedTextButton onClick={() => navigate(`../userdetails/${element.idx}`)}>상세보기</UnderlinedTextButton>
       </td>
     </tr>
   ));
 
   const handlePage = (page: number) => {
-    const status = searchParams.get('status') ?? 'all';
+    const status = searchParams.get('status') ?? 'active';
     const searchType = searchParams.get('searchType') ?? 'all';
     const keyword = searchParams.get('keyword') ?? '';
-    setSearchParams({ page: String(page), searchType, status, keyword });
+    const level = searchParams.get('level') ?? '';
+    setSearchParams({ page: String(page), searchType, status, keyword, level });
   };
 
   useEffect(() => {
     const page = searchParams.get('page') ?? 1;
-    const status = searchParams.get('status') ?? 'all';
+    const status = searchParams.get('status') ?? 'active';
     const searchType = searchParams.get('searchType') ?? 'all';
     const keyword = searchParams.get('keyword') ?? '';
+    const level = searchParams.get('level') ?? '';
 
     setPage(Number(page));
     setStatus(status);
     setSearchType(searchType);
     setKeyword(keyword);
+    setLevel(level);
 
-    getUserList(Number(page), status, searchType, keyword);
+    getUserList(Number(page), status, searchType, keyword, level);
   }, [searchParams]);
 
   return (
     <>
       <TopBox>
         <Group>
+          <UnderLineBox>
+            <Select
+                rightSection={<DownIcon src={arrDownImage} />}
+                styles={(theme) => ({
+                    rightSection: { pointerEvents: 'none' },
+                    label: { fontSize: 12, color: '#777' },
+                    item: {
+                        '&[data-selected]': {
+                            '&, &:hover': {
+                                backgroundColor: '#121212',
+                                color: '#fff',
+                            },
+                        },
+                    },
+                })}
+                variant="unstyled"
+                value={level}
+                data={LevelList}
+                onChange={(value: string) => setLevel(value)}
+            />
+          </UnderLineBox>
           <UnderLineBox>
             <Select
               rightSection={<DownIcon src={arrDownImage} />}
@@ -147,11 +179,11 @@ function UserList() {
               })}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  setSearchParams({ page: String(page), searchType, status, keyword });
+                  setSearchParams({ page: String(page), searchType, status, keyword, level });
                 }
               }}
               rightSection={
-                <SearchButton onClick={() => setSearchParams({ page: String(page), searchType, status, keyword })} src={searchButtonImage} />
+                <SearchButton onClick={() => setSearchParams({ page: String(page), searchType, status, keyword, level })} src={searchButtonImage} />
               }
             />
           </SearchUnderLineBox>
@@ -161,16 +193,17 @@ function UserList() {
           <WhiteButtonText>초기화</WhiteButtonText>
         </WhiteButton>
       </TopBox>
-      <div style={{ overflowY: 'scroll', width: '100%' }}>
+      <div >
         <Table verticalSpacing="xs" className={classes.table}>
           <thead className={classes.header}>
             <tr>
-              <th>회원아이디</th>
+              <th>회원구분</th>
+              <th>아이디(이메일)</th>
               <th>이름</th>
               <th>닉네임</th>
+              <th>휴대폰</th>
               <th>가입일시</th>
-              <th>상태값</th>
-              <th>회원레벨</th>
+              <th>가입구분</th>
               <th>관리</th>
             </tr>
           </thead>
@@ -180,7 +213,7 @@ function UserList() {
       <PaginationBox>
         <Pagination
           page={page}
-          total={Math.ceil(total / 10)}
+          total={Math.ceil(total / 20)}
           position="center"
           onChange={handlePage}
           styles={(theme) => ({

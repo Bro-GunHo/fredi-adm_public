@@ -7,9 +7,30 @@ import dayjs from 'dayjs';
 import AlertModal from '../../components/Modal/AlertModal';
 import ConfirmModal from '../../components/Modal/ConfirmModal';
 
+
+
+const ASKLIST = [
+    {value: '1', label: 'About Product'},
+    {value: '2', label: 'Availiability'},
+    {value: '3', label: 'Shipping'},
+    {value: '4', label: 'Payment'},
+    {value: '5', label: 'Condition & Provenance'},
+    {value: '6', label: 'Others'},
+];
+
+const AskObject = {
+  '1': 'About Product',
+  '2': 'Availiability',
+  '3': 'Shipping',
+  '4': 'Payment',
+  '5': 'Condition & Provenance',
+  '6': 'Others'
+};
+
 type TAskListItemAdmin = {
   idx: number;
   title: string;
+  ask_type:'1' | '2' | '3' | '4' | '5' | '6';
   question: string;
   answer: string | null;
   created_time: Date;
@@ -136,7 +157,7 @@ function AskListAdmin() {
                   <Accordion.Control>
                     <TitleBox>
                       <RowWrap>
-                        <ListItemTitle>{item.title}</ListItemTitle>
+                        <ListItemTitle>{item?.ask_type ? `[${AskObject[item.ask_type]}]`:''} {item.title}</ListItemTitle>
                         <StatusBox answerd={!!item.answer}>
                           <StatusBoxText>{item.answer ? '답변완료' : '답변대기'}</StatusBoxText>
                         </StatusBox>

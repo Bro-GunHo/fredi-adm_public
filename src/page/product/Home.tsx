@@ -78,14 +78,16 @@ const CATEGORYLIST = [
 ];
 
 function Home() {
+
+
   const navigate = useNavigate();
   let [searchParams, setSearchParams] = useSearchParams();
   const keywordParams = searchParams.get('keyword') ?? '';
-  const categoryParams = (searchParams.get('category') as '1' | '2' | '3' | '4' | '5' | '6') ?? '1';
+  const categoryParams = (searchParams.get('category') as string) ?? '1';
   const [productList, setProductList] = useState<TProductListItem[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const [category, setCategory] = useState<'1' | '2' | '3' | '4' | '5' | '6'>(categoryParams);
+  const [category, setCategory] = useState<string>(categoryParams);
   const [showLogin, setShowLogin] = useState(false);
   const [bannerList, setBannerList] = useState<TImage[]>([]);
   const [bannerListMobile, setBannerListMobile] = useState<TImage[]>([]);
@@ -259,7 +261,7 @@ function Home() {
     );
   };
 
-  const chageCategory = (value: '1' | '2' | '3' | '4' | '5' | '6') => {
+  const chageCategory = (value: string) => {
     setCategory(value);
     setSearchParams({
       keyword,
@@ -346,14 +348,14 @@ function Home() {
           }
         }}
         onClickFilter={(item) => {
-          chageCategory(item.value as '1' | '2' | '3' | '4' | '5' | '6');
+          chageCategory(item.value as string);
         }}
         categoryList={CATEGORYLIST}
         category={category}
         keyword={keyword}
         onChangeInput={(e) => setKeyword(e.target.value)}
-        onChangeCategory={(value: '1' | '2' | '3' | '4' | '5' | '6') => {
-          chageCategory(value as '1' | '2' | '3' | '4' | '5' | '6');
+        onChangeCategory={(value: string) => {
+          chageCategory(value as string);
         }}
       />
       {/* <ShowTypeButton onClickType1={() => setShowType(1)} onClickType2={() => setShowType(2)} /> */}

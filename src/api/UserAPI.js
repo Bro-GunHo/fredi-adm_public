@@ -103,3 +103,49 @@ export const APIVerifyAuthNumber = async (data) => {
   const res = await API.post('/user/auth', data);
   return res.data;
 };
+
+
+export const APISignInAdmin = async (data) => {
+    const res = await API.post('/user/sign-in-admin', data);
+    return res.data;
+};
+
+
+export const APIModifyUserAddressAdmin = async (data) => {
+    const config = Authorization();
+    const res = await API.put('/user/profile-address-admin', data, { headers: config });
+    return res.data;
+};
+
+
+export const APIUserRecover = async (data) => {
+    const config = Authorization();
+    const res = await API.put('/user/restore-account-admin', data, { headers: config });
+    return res.data;
+};
+
+
+export const APIUserDesignerListAdmin = async (data) => {
+    const config = Authorization();
+    const res = await API.get('/user/designer-list-admin', { params: data, headers: config });
+    return res.data;
+};
+
+export const APIReportUserListAdmin = async (data) => {
+    const config = Authorization();
+    const res = await API.get('/user/report-list-admin', { params: data, headers: config });
+    return res.data;
+};
+
+export const APIReportUserDetails = async (data) => {
+    const config = Authorization();
+    const res = await API.get('/user/report-details', { params: data, headers: config });
+    return res.data;
+};
+
+export const APIReportModify = async (data) => {
+    const config = Authorization();
+    const res = await API.put('/user/report-modify', data, { headers: config });
+    return res.data;
+};
+

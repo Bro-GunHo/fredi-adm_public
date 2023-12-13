@@ -3,11 +3,14 @@ import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Modal, Select } from '@mantine/core';
 import arrDownImage from '../../asset/image/arr_down.png';
-import { APIDeleteAccountAdmin, APIModifyPassword, APIModifyUserDetailsAdmin, APIUserDetails, checkNicknameExcludeUser } from '../../api/UserAPI';
+import { APIDeleteAccountAdmin, APIModifyPassword, APIModifyUserDetailsAdmin, APIUserDetails, checkNicknameExcludeUser, APIModifyUserAddressAdmin, APIUserRecover } from '../../api/UserAPI';
 import { TUserDetails } from '../user/Profile';
 import dayjs from 'dayjs';
 import { passwordReg, phoneReg } from '../../util/Reg';
 import AlertModal from '../../components/Modal/AlertModal';
+import PostModal from '../../components/Modal/PostModal';
+
+import { LevelObject, LevelList, UserTypeObject } from '../../util/GlobalValues';
 
 const STATUSLIST = [
   { value: 'active', label: '가입' },
@@ -15,11 +18,21 @@ const STATUSLIST = [
   { value: 'suspended', label: '휴면' },
 ];
 
-const LEVELLIST = [
-  { value: '1', label: '입점업체회원' },
-  { value: '2', label: '일반회원2' },
-  { value: '3', label: '일반회원1' },
+
+
+//
+// const LEVELLIST = [
+//   { value: '1', label: '입점업체회원' },
+//   { value: '2', label: '일반회원2' },
+//   { value: '3', label: '일반회원1' },
+// ];
+
+const TRANDING_LIST = [
+    {value: 'Y', label: '노출'},
+    {value: 'N', label: '미노출'},
 ];
+
+const LEVELLIST = LevelList;
 
 function UserDetails() {
   const { idx } = useParams();
@@ -41,7 +54,10 @@ function UserDetails() {
   >();
   const [alertModal, setAlertModal] = useState(false);
   const [showDeleteAccountConfirmModal, setShowDeleteAccountConfirmModal] = useState(false);
+    const [showRestoreAccountConfirmModal, setShowRestoreAccountConfirmModal] = useState(false);
+
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+    const [showPostModal, setShowPostModal] = useState(false)
 
   const [userDetails, setUserDetails] = useState<TUserDetails>();
   const [isSnsUser, setIsSnsUser] = useState(false);
@@ -61,6 +77,13 @@ function UserDetails() {
   const [status, setStatus] = useState<'active' | 'deleted' | 'suspended'>();
   const [level, setLevel] = useState<'0' | '1' | '2' | '3'>();
 
+  const [isTranding, setIsTranding] = useState<'Y' | 'N'>('Y');
+    const [showAddressChangeModal, setShowAddressChangeModal] = useState(false);
+
+    const [address1, setAddress1] = useState("")
+    const [address2, setAddress2] = useState("")
+    const [zipcode, setZipcode] = useState("")
+
   const getUserDetails = async () => {
     console.log(idx);
     const data = {
@@ -76,6 +99,10 @@ function UserDetails() {
       setStatus(res.deleted_time ? 'deleted' : res.suspended_time ? 'suspended' : 'active');
       setLevel(res.level === 0 ? '0' : res.level === 1 ? '1' : res.level === 2 ? '2' : '3');
       setIsSnsUser(res.type !== 1 ? true : false);
+      setIsTranding(res.is_tranding);
+        setAddress1(res.address1)
+        setAddress2(res.address2)
+        setZipcode(res.zipcode)
     } catch (error) {
       console.log(error);
       alert(error);
@@ -131,7 +158,9 @@ function UserDetails() {
       nickname: nickname,
       status: status,
       level: level,
+      is_tranding: level=='2'? isTranding:'N',
     };
+
     try {
       const res = await APIModifyUserDetailsAdmin(data);
       console.log(res);
@@ -151,11 +180,46 @@ function UserDetails() {
       const res = await APIDeleteAccountAdmin(data);
       console.log(res);
       setShowDeleteAccountModal(true);
+        getUserDetails();
     } catch (error) {
       console.log(error);
       alert(error);
     }
   };
+
+    const handleRestoreUser = async () =>{
+      try {
+          const response = await APIUserRecover({idx: Number(idx) });
+          //const { state, logisticCorrect } = await APIUserRecover(idx);
+          console.log('response', response);
+          getUserDetails();
+      } catch (error) {
+          console.error(error);
+          alert("송장번호 입력이 실패했습니다.");
+      }
+    }
+
+    const onModifyAddress = async () => {
+
+        //profile-address-admin
+        const data = {
+            user_idx: Number(idx),
+            address1: address1,
+            address2: address2,
+            zipcode: zipcode,
+        }
+
+        try {
+            const res = await APIModifyUserAddressAdmin(data)
+            console.log(res)
+            setAlertType("modified")
+            setShowAddressChangeModal(false);
+            getUserDetails()
+        } catch (error) {
+            console.log(error)
+            alert(error)
+        }
+    }
 
   useEffect(() => {
     getUserDetails();
@@ -177,6 +241,35 @@ function UserDetails() {
 
   return (
     <>
+        {level =='2'?
+            <RowWap>
+              <LeftText>Tranding Artist</LeftText>
+              <UnderLineBox>
+                <Select
+                    rightSection={<DownIcon src={arrDownImage} />}
+                    styles={(theme) => ({
+                        rightSection: { pointerEvents: 'none' },
+                        root: { width: '100%' },
+                        input: { fontSize: 16 },
+                        item: {
+                            '&[data-selected]': {
+                                '&, &:hover': {
+                                    backgroundColor: '#121212',
+                                    color: '#fff',
+                                },
+                            },
+                            fontSize: 16,
+                        },
+                    })}
+                    variant="unstyled"
+                    value={isTranding}
+                    onChange={(value: 'N' | 'Y') => setIsTranding(value)}
+                    data={TRANDING_LIST}
+                />
+              </UnderLineBox>
+            </RowWap>
+        :null
+        }
       <RowWap>
         <LeftText>아이디</LeftText>
         <RightText>{userDetails?.user_id}</RightText>
@@ -220,14 +313,14 @@ function UserDetails() {
         <LeftText>휴대폰번호</LeftText>
         <TextInput value={phone} maxLength={11} onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))} placeholder="휴대폰 번호 입력" />
       </RowWap>
-      <RowWap>
+      {/*<RowWap>
         <LeftText>성별</LeftText>
         <RightText>{userDetails?.gender === 1 ? '남자' : '여자'}</RightText>
       </RowWap>
       <RowWap>
         <LeftText>생년월일</LeftText>
         <RightText>{userDetails?.birth}</RightText>
-      </RowWap>
+      </RowWap>*/}
       {!isSnsUser && (
         <>
           <RowWap>
@@ -253,9 +346,20 @@ function UserDetails() {
           </RowWap>
         </>
       )}
+
       <RowWap>
         <LeftText>가입구분</LeftText>
-        <UnderLineBox>
+        <RightText>{UserTypeObject[userDetails?.type ?? 1]}</RightText>
+      </RowWap>
+      <RowWap >
+          <LeftText>주소</LeftText>
+          <RightText>{userDetails?.zipcode?`[${zipcode}]`:''} {address1} {address2}</RightText>
+        <UnderlineTextButton onClick={()=>setShowAddressChangeModal(true)}>변경하기</UnderlineTextButton>
+      </RowWap>
+      <RowWap>
+        <LeftText>상태</LeftText>
+        <RightText>{status=='active'? '가입': status=='deleted'? '탈퇴':'휴면'}</RightText>
+        {/*<UnderLineBox>
           <Select
             rightSection={<DownIcon src={arrDownImage} />}
             styles={(theme) => ({
@@ -277,7 +381,7 @@ function UserDetails() {
             onChange={(value: 'active' | 'deleted' | 'suspended') => setStatus(value)}
             data={STATUSLIST}
           />
-        </UnderLineBox>
+        </UnderLineBox>*/}
       </RowWap>
       <RowWap>
         <LeftText>가입일시</LeftText>
@@ -306,11 +410,17 @@ function UserDetails() {
         <Button type="white" onClick={() => navigate(-1)}>
           <ButtonText type="white">이전</ButtonText>
         </Button>
-        {!userDetails?.deleted_time && (
-          <Button onClick={() => setShowDeleteAccountConfirmModal(true)} type="green">
+        {userDetails?.deleted_time ?
+            (<Button onClick={()=>setShowRestoreAccountConfirmModal(true)} type="green">
+            <ButtonText type="green">복원</ButtonText>
+          </Button>)
+          :
+            (
+                <Button onClick={() => setShowDeleteAccountConfirmModal(true)} type="green">
             <ButtonText type="green">탈퇴</ButtonText>
           </Button>
-        )}
+            )
+        }
       </ButtonRowWrap>
       <AlertModal
         visible={alertModal}
@@ -372,9 +482,113 @@ function UserDetails() {
           </ButtonWrap>
         </ModalBox>
       </Modal>
+
+      <Modal
+          opened={showRestoreAccountConfirmModal}
+          onClose={() => setShowRestoreAccountConfirmModal(false)}
+          overlayOpacity={0.5}
+          size="auto"
+          centered
+          withCloseButton={false}
+      >
+        <ModalBox>
+          <ModalTitle>해당 회원정보를 복구처리 하시겠습니까?</ModalTitle>
+          <ButtonWrap>
+            <ModalBlackButton onClick={handleRestoreUser}>
+              <BlackButtonText>확인</BlackButtonText>
+            </ModalBlackButton>
+            <ModalWhiteButton onClick={() => setShowRestoreAccountConfirmModal(false)}>
+              <WhiteButtonText>취소</WhiteButtonText>
+            </ModalWhiteButton>
+          </ButtonWrap>
+        </ModalBox>
+      </Modal>
+
+
+      <Modal opened={showAddressChangeModal}
+          onClose={() => setShowAddressChangeModal(false)}
+          overlayOpacity={0.5}
+          size="auto"
+          centered
+      >
+        <ModalBox>
+            <ModalTitle>Change Address</ModalTitle>
+            <ModalContWrap>
+                <CustomZipInput
+                    maxLength={6}
+                    value={zipcode}
+                    onChange={e => setZipcode(e.target.value)}
+                    placeholder="우편번호"
+                    readOnly={true}
+                    onClick={()=>setShowPostModal(true)}
+                />
+              <ModalWhiteButton onClick={() => setShowPostModal(true)}>
+                <WhiteButtonText>Search Address</WhiteButtonText>
+              </ModalWhiteButton>
+
+            </ModalContWrap>
+            <ModalContWrap>
+                <CustomInput
+                    maxLength={100}
+                    value={address1}
+                    onChange={e => setAddress1(e.target.value)}
+                    placeholder="기본주소"
+                />
+            </ModalContWrap>
+            <ModalContWrap>
+                <CustomInput
+                    maxLength={200}
+                    value={address2}
+                    onChange={e => setAddress2(e.target.value)}
+                    placeholder="상세주소"
+                />
+            </ModalContWrap>
+          <ButtonWrap style={{marginTop:30}}>
+            <ModalBlackButton onClick={onModifyAddress}>
+              <BlackButtonText>확인</BlackButtonText>
+            </ModalBlackButton>
+            <ModalWhiteButton onClick={() => setShowAddressChangeModal(false)}>
+              <WhiteButtonText>취소</WhiteButtonText>
+            </ModalWhiteButton>
+          </ButtonWrap>
+        </ModalBox>
+    </Modal>
+
+      <PostModal visible={showPostModal} setVisible={setShowPostModal} setAddress={(data:any)=>{
+          console.log(data);
+
+          setZipcode(data.zonecode);
+          setAddress1(data.roadAddress);
+          if (data.buildingName)  setAddress2('('+data.buildingName+')');
+          else setAddress2('');
+      }} />
+
     </>
   );
 }
+
+const CustomInput = styled.input`
+    width: 300px;
+    font-size: 14px;
+    height:60px;
+    margin: 0 7px;
+`;
+
+const CustomZipInput = styled.input`
+    width: 80px;
+    font-size: 14px;
+    height:60px;
+    margin: 0 7px;
+`;
+
+const ModalContWrap = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 5px;
+  @media only screen and (max-width: 768px) {
+  flex-direction: column;
+}
+  `
 
 const ButtonRowWrap = styled.div`
   display: flex;

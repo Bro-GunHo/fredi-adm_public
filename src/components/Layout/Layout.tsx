@@ -5,14 +5,24 @@ import Footer from './Footer';
 import Header from './Header';
 import ScrollToTop from './ScrollToTop';
 import BottomNav from '../Navigation/BottomNav';
+import {useLocation} from "react-router-dom";
 
 interface Props {
   children: ReactNode;
 }
 
 function Layout({ children }: Props) {
-  return (
-    <Container>
+
+    const location = useLocation();
+    const pathName = location.pathname;
+    console.log('pathName', pathName)
+
+    if (pathName=='/'){
+        return <>{children}</>
+    } else {
+
+        return (
+            <Container>
       <ScrollToTop>
         <Header />
         <Content>{children}</Content>
@@ -20,7 +30,8 @@ function Layout({ children }: Props) {
         <BottomNav />
       </ScrollToTop>
     </Container>
-  );
+        );
+    }
 }
 
 const Container = styled.div`

@@ -59,6 +59,31 @@ export const APIDashboardProducerList = async (data) => {
   return res.data;
 };
 
+export const APIDashboardSnsList = async (data) => {
+    const config = Authorization();
+    const res = await API.get('/setting/dashboard-sns', { params: data, headers: config });
+    return res.data;
+};
+
+export const APIDashboardSnsLikeList = async (data) => {
+    const config = Authorization();
+    const res = await API.get('/setting/dashboard-likesns', { params: data, headers: config });
+    return res.data;
+};
+
+export const APIDashboardSnsBookmarkList = async (data) => {
+    const config = Authorization();
+    const res = await API.get('/setting/dashboard-bookmarksns', { params: data, headers: config });
+    return res.data;
+};
+
+export const APIDashboardUserList = async (data) => {
+    const config = Authorization();
+    const res = await API.get('/setting/dashboard-user', { params: data, headers: config });
+    return res.data;
+};
+
+
 export const APICheckNew = async () => {
   const res = await API.get('/setting/new');
   return res.data;

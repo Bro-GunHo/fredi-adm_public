@@ -50,7 +50,7 @@ export type TUserDetails = {
 
 function Header() {
   const location = useLocation();
-  const pathName = location.pathname.split('/')[1];
+  const pathName = location.pathname.split('/')[2];
   console.log('pathName', pathName);
 
   const navigate = useNavigate();
@@ -89,8 +89,13 @@ function Header() {
   }, [user]);
 
   useEffect(() => {
+
+    if (!token) {
+      navigate('/auth/signin');
+    }
+
     getUserDetails();
-  }, []);
+  }, [token]);
   
   const getUserDetails = async () => {
     try {
@@ -244,48 +249,7 @@ function Header() {
     <>
       <HeaderBox>
         {showBackButton ? <BackButton onClick={() => navigate(-1)} src={backButtonImage} /> : <Logo onClick={goHome} src={logoImage} />}
-
-        <WebMenuWrap>
-          {/* <MenuButton>
-            <MenuButtonText>커뮤니티</MenuButtonText>
-          </MenuButton> */}
-          <MenuButton onClick={goProduct}>
-            <MenuButtonText>작품보기</MenuButtonText>
-          </MenuButton>
-
-          {user.level <= 1 && (
-            <MenuButton onClick={goProducing}>
-              <MenuButtonText>Producing</MenuButtonText>
-            </MenuButton>
-          )}
-
-          <MenuButton onClick={goShop}>
-            <MenuButtonText>Shop</MenuButtonText>
-          </MenuButton>
-          {/* <MenuButton onMouseOver={() => setIsMouseOveredLikeButton(true)} onMouseOut={() => setIsMouseOveredLikeButton(false)}>
-            <LikeButton onClick={goLikeList} src={!isMouseOveredLikeButton ? likeOffImage : likeOnImage} />
-          </MenuButton> */}
-          <MenuButton onClick={goContact}>
-            <MenuButtonText>고객센터</MenuButtonText>
-          </MenuButton>
-
-          {/* <MenuButton onClick={goMyPage}>
-            <MenuButtonText>마이페이지</MenuButtonText>
-          </MenuButton> */}
-
-          {token && user.level === 0 && (
-            <MenuButton onClick={goAdmin}>
-              <MenuButtonText>MANAGER</MenuButtonText>
-            </MenuButton>
-          )}
-        </WebMenuWrap>
         <ButtonWraps>
-          {/* <MenuButton onMouseOver={() => setIsMouseOveredLikeButton(true)} onMouseOut={() => setIsMouseOveredLikeButton(false)}>
-            <LikeButton onClick={goLikeList} src={!isMouseOveredLikeButton ? likeOffImage : likeOnImage} onMouseOver={() => setIsMouseOveredLikeButton(true)} onMouseOut={() => setIsMouseOveredLikeButton(false)} />
-          </MenuButton> */}
-          <LikeButton onClick={goLikeList} src={!isMouseOveredLikeButton ? likeOffImage : likeOnImage} onMouseOver={() => setIsMouseOveredLikeButton(true)} onMouseOut={() => setIsMouseOveredLikeButton(false)} />
-          <CartButton onClick={goCart} src={cart} />
-          <LayoutLine>{` | `}</LayoutLine>
           <Menu shadow="md" width={150} styles={(theme) => ({
             item: {
               fontFamily: 'NotoSans',
@@ -300,7 +264,7 @@ function Header() {
               marginTop: 10,
               marginBottom: 10,
             },
-          })}>  
+          })}>
             <Menu.Target>
               <MyPageButton>MY</MyPageButton>
             </Menu.Target>
@@ -318,7 +282,7 @@ function Header() {
                   } else {
                     navigate('/modifyuserinfo');
                   }
-                } 
+                }
                 }}>개인정보수정</Menu.Item>
               <Menu.Item onClick={goLikeList}>찜한작품</Menu.Item>
               <Menu.Item onClick={goCart}>장바구니</Menu.Item>
@@ -326,7 +290,7 @@ function Header() {
               <Menu.Item onClick={go_requestList}>문의내역</Menu.Item></>
               ) : (
                 <>
-                <Menu.Item onClick={goMyPage}>MY</Menu.Item>
+                    {/*<Menu.Item onClick={goMyPage}>MY</Menu.Item>*/}
                 </>
               )}
 
