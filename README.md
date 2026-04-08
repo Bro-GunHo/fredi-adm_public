@@ -1,6 +1,6 @@
-# 📖 FREDI - Front(관리자)
+# 📖 FREDI - Admin(관리자)
 
-- 사용자 웹(pc / mobile)
+- 관리자 웹(pc / mobile)
 
 ## ⚙️ 개발 환경
 
